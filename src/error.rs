@@ -7,4 +7,7 @@ pub enum Error {
 
     #[error("Failed to parse response data")]
     ParseError,
+
+    #[error("Missing SNYK_API_KEY environment variable")]
+    EnvironmentError,
 }

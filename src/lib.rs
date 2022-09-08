@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use reqwest;
-use std::sync::Arc;
 use std::env;
+use std::sync::Arc;
 
 mod error;
 pub mod model;
@@ -18,14 +18,18 @@ pub struct SnykDatasource {
 }
 
 impl SnykDatasource {
-    pub fn new(http_client: Arc<reqwest::Client>) -> Self {
-        let api_key = env::var("SNYK_API_KEY").expect("A SNYK_API_KEY environment variable must be provided");
+    pub fn new(http_client: Arc<reqwest::Client>) -> Result<Self, error::Error> {
+        let api_key = env::var("SNYK_API_KEY");
+        let api_key = match api_key {
+            Ok(api_key) => api_key,
+            Err(_) => return Err(error::Error::EnvironmentError),
+        };
 
-        Self {
+        Ok(Self {
             http_client,
             base_url: String::from("https://api.snyk.io"),
             api_key,
-        }
+        })
     }
 }
 
