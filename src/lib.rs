@@ -1,6 +1,5 @@
 use async_trait::async_trait;
 use reqwest;
-use std::sync::Arc;
 use serde_json;
 
 pub mod error;
@@ -9,17 +8,21 @@ pub mod model;
 #[async_trait]
 pub trait Datasource {
     async fn list_orgs(&self) -> Result<model::org::Orgs, error::Error>;
-    async fn list_aggregated_issues(&self, org_id: &str, project_id: &str) -> Result<model::issue::Issues, error::Error>;
+    async fn list_aggregated_issues(
+        &self,
+        org_id: &str,
+        project_id: &str,
+    ) -> Result<model::issue::Issues, error::Error>;
 }
 
 pub struct SnykDatasource<'a> {
-    http_client: Arc<reqwest::Client>,
+    http_client: &'a reqwest::Client,
     base_url: String,
     api_key: &'a str,
 }
 
 impl<'a> SnykDatasource<'a> {
-    pub fn new(http_client: Arc<reqwest::Client>, api_key: &'a str) -> Result<Self, error::Error> {
+    pub fn new(http_client: &'a reqwest::Client, api_key: &'a str) -> Result<Self, error::Error> {
         Ok(Self {
             http_client,
             base_url: String::from("https://api.snyk.io"),
@@ -50,9 +53,18 @@ impl<'a> Datasource for SnykDatasource<'a> {
         }
     }
 
-    async fn list_aggregated_issues(&self, org_id: &str, project_id: &str) -> Result<model::issue::Issues, error::Error> {
-        let url = format!("{}/api/v1/org/{}/project/{}/aggregated-issues", self.base_url, org_id, project_id);
+    async fn list_aggregated_issues(
+        &self,
+        org_id: &str,
+        project_id: &str,
+    ) -> Result<model::issue::Issues, error::Error> {
+        let url = format!(
+            "{}/api/v1/org/{}/project/{}/aggregated-issues",
+            self.base_url, org_id, project_id
+        );
         let body = model::issue::AggregatedIssuesRequest::new();
+
+        println!("{}:{}", org_id, project_id);
 
         let response = self
             .http_client
@@ -67,9 +79,6 @@ impl<'a> Datasource for SnykDatasource<'a> {
             Ok(response) => response.json::<model::issue::Issues>().await,
             Err(_) => return Err(error::Error::RequestError),
         };
-
-        println!("{:#?}", url);
-        println!("{:#?}", data);
 
         match data {
             Ok(data) => Ok(data),

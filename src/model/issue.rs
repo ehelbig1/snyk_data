@@ -5,14 +5,14 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "camelCase")]
 pub struct AggregatedIssuesRequest {
     include_description: bool,
-    include_introduced_through: bool
+    include_introduced_through: bool,
 }
 
 impl AggregatedIssuesRequest {
     pub fn new() -> Self {
         Self {
             include_description: true,
-            include_introduced_through: true
+            include_introduced_through: true,
         }
     }
 }
@@ -58,7 +58,7 @@ pub struct IssueData {
 
     #[serde(rename = "CVSSv3")]
     pub cvssv3: Option<String>,
-    
+
     pub cvss_score: Option<f64>,
     pub language: String,
     pub patches: Option<Vec<Patch>>,
@@ -93,7 +93,7 @@ pub struct Semver {
 #[serde(untagged)]
 pub enum Vulnerable {
     Version(String),
-    Versions(Vec<String>)
+    Versions(Vec<String>),
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
@@ -115,8 +115,7 @@ pub struct IntroducedThrough {
 
 #[derive(Debug, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Data {
-}
+pub struct Data {}
 
 #[derive(Debug, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -142,14 +141,14 @@ pub struct FixInfo {
 #[serde(rename_all = "camelCase")]
 pub struct Priority {
     pub score: i64,
-    pub factors: Vec<Factor>
+    pub factors: Vec<Factor>,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Factor {
     name: String,
-    description: String
+    description: String,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
