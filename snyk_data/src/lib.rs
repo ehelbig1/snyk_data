@@ -13,6 +13,7 @@ pub trait Datasource {
         org_id: &str,
         project_id: &str,
     ) -> Result<model::issue::Issues, error::Error>;
+    async fn list_projects(&self, org_id: &str) -> Result<model::projects::Projects, error::Error>;
 }
 
 pub struct SnykDatasource<'a> {
@@ -22,12 +23,12 @@ pub struct SnykDatasource<'a> {
 }
 
 impl<'a> SnykDatasource<'a> {
-    pub fn new(http_client: &'a reqwest::Client, api_key: &'a str) -> Result<Self, error::Error> {
-        Ok(Self {
+    pub fn new(http_client: &'a reqwest::Client, api_key: &'a str) -> Self {
+        Self {
             http_client,
             base_url: String::from("https://api.snyk.io"),
             api_key,
-        })
+        }
     }
 }
 
@@ -64,19 +65,41 @@ impl<'a> Datasource for SnykDatasource<'a> {
         );
         let body = model::issue::AggregatedIssuesRequest::new();
 
-        println!("{}:{}", org_id, project_id);
-
         let response = self
             .http_client
             .post(&url)
             .header("Authorization", format!("token {}", self.api_key))
-            .header("Content-Length", 0)
+            .header("Content-Type", "application/json")
             .body(serde_json::to_string(&body).unwrap())
             .send()
             .await;
 
         let data = match response {
             Ok(response) => response.json::<model::issue::Issues>().await,
+            Err(_) => return Err(error::Error::RequestError),
+        };
+
+        match data {
+            Ok(data) => Ok(data),
+            Err(_) => Err(error::Error::ParseError),
+        }
+    }
+
+    async fn list_projects(&self, org_id: &str) -> Result<model::projects::Projects, error::Error> {
+        let url = format!("{}/api/v1/org/{}/projects", self.base_url, org_id);
+        let body = model::projects::ListProjectsRequest::new();
+
+        let response = self
+            .http_client
+            .post(&url)
+            .header("Authorization", format!("token {}", self.api_key))
+            .header("Content-Type", "application/json")
+            .body(serde_json::to_string(&body).unwrap())
+            .send()
+            .await;
+
+        let data = match response {
+            Ok(response) => response.json::<model::projects::Projects>().await,
             Err(_) => return Err(error::Error::RequestError),
         };
 

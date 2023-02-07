@@ -4,17 +4,84 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AggregatedIssuesRequest {
-    include_description: bool,
-    include_introduced_through: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    include_description: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    include_introduced_through: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    filters: Option<Filters>,
 }
 
 impl AggregatedIssuesRequest {
     pub fn new() -> Self {
         Self {
-            include_description: true,
-            include_introduced_through: true,
+            include_description: None,
+            include_introduced_through: None,
+            filters: None,
         }
     }
+}
+
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Filters {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    severities: Option<Vec<Severity>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    exploit_maturity: Option<ExploitMaturity>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    types: Option<Vec<Type>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    ignored: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    patched: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    priority: Option<PriorityScore>,
+}
+
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub enum Severity {
+    Critical,
+    High,
+    Medium,
+    Low,
+}
+
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub enum ExploitMaturity {
+    Mature,
+    ProofOfConcept,
+    NoKnownExploit,
+    NoData,
+}
+
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub enum Type {
+    Vuln,
+    License,
+}
+
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PriorityScore {
+    score: Score,
+}
+
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Score {
+    min: usize,
+    max: usize,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
