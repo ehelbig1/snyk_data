@@ -11,8 +11,17 @@ pub struct Opt {
 impl Opt {
     pub async fn run(self, datasource: &dyn snyk_data::Datasource) -> anyhow::Result<()> {
         match self.cmd {
-            Command::List => {
+            Command::List(opt) => {
                 let orgs = datasource.list_orgs().await?;
+
+                let orgs: Vec<snyk_data::model::org::Org> = if let Some(name) = opt.name {
+                    orgs.orgs.into_iter()
+                        .filter(|org| org.name.to_lowercase().contains(&name))
+                        .collect()
+                } else {
+                    orgs.orgs
+                };
+
                 dbg!(orgs);
 
                 Ok(())
@@ -23,5 +32,11 @@ impl Opt {
 
 #[derive(Debug, PartialEq, StructOpt)]
 enum Command {
-    List,
+    List(List),
+}
+
+#[derive(Debug, PartialEq, StructOpt)]
+struct List {
+    #[structopt(short, long)]
+    name: Option<String>
 }

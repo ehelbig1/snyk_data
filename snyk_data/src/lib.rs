@@ -8,12 +8,17 @@ pub mod model;
 #[async_trait]
 pub trait Datasource {
     async fn list_orgs(&self) -> Result<model::org::Orgs, error::Error>;
-    async fn list_aggregated_issues(
+
+    // This only includes sca, container, and iac issues
+    async fn list_aggregated_sca_container_iac_issues(
         &self,
         org_id: &str,
         project_id: &str,
     ) -> Result<model::issue::Issues, error::Error>;
-    async fn list_projects(&self, org_id: &str) -> Result<model::projects::Projects, error::Error>;
+
+    async fn list_sast_issues(&self, org_id: &str, project_id: &str, properties: &model::issue_v3::SnykCodeIssuesRequest) -> Result<model::issue_v3::Response, error::Error>;
+    async fn list_projects(&self, org_id: &str, properties: &model::projects::ListProjectsRequest) -> Result<model::projects::Projects, error::Error>;
+    async fn next(&self, path: &str) -> Result<model::issue_v3::Response, error::Error>;
 }
 
 pub struct SnykDatasource<'a> {
@@ -54,7 +59,7 @@ impl<'a> Datasource for SnykDatasource<'a> {
         }
     }
 
-    async fn list_aggregated_issues(
+    async fn list_aggregated_sca_container_iac_issues(
         &self,
         org_id: &str,
         project_id: &str,
@@ -85,16 +90,37 @@ impl<'a> Datasource for SnykDatasource<'a> {
         }
     }
 
-    async fn list_projects(&self, org_id: &str) -> Result<model::projects::Projects, error::Error> {
+    async fn list_sast_issues(&self, org_id: &str, project_id: &str, properties: &model::issue_v3::SnykCodeIssuesRequest) -> Result<model::issue_v3::Response, error::Error> {
+        let url = format!("{}/rest/orgs/{}/issues", self.base_url, org_id);
+
+        let response = self.http_client
+            .get(&url)
+            .header("Authorization", format!("token {}", self.api_key))
+            .header("Content-Type", "application/vnd.api+json")
+            .query(&[("project_id", project_id), ("version", &properties.version)])
+            .send()
+            .await;
+
+        let data = match response {
+            Ok(response) => response.json::<model::issue_v3::Response>().await,
+            Err(_) => return Err(error::Error::RequestError)
+        };
+
+        match data {
+            Ok(data) => Ok(data),
+            Err(_) => Err(error::Error::ParseError)
+        }
+    }
+
+    async fn list_projects(&self, org_id: &str, properties: &model::projects::ListProjectsRequest) -> Result<model::projects::Projects, error::Error> {
         let url = format!("{}/api/v1/org/{}/projects", self.base_url, org_id);
-        let body = model::projects::ListProjectsRequest::new();
 
         let response = self
             .http_client
             .post(&url)
             .header("Authorization", format!("token {}", self.api_key))
             .header("Content-Type", "application/json")
-            .body(serde_json::to_string(&body).unwrap())
+            .body(serde_json::to_string(&properties).unwrap())
             .send()
             .await;
 
@@ -106,6 +132,28 @@ impl<'a> Datasource for SnykDatasource<'a> {
         match data {
             Ok(data) => Ok(data),
             Err(_) => Err(error::Error::ParseError),
+        }
+    }
+
+    async fn next(&self, path: &str) -> Result<model::issue_v3::Response, error::Error> {
+        let url = format!("{}/rest{}", self.base_url, path);
+
+        let response = self
+            .http_client
+            .get(&url)
+            .header("Authorization", format!("token {}", self.api_key))
+            .header("Content-Type", "application/vnd.api+json")
+            .send()
+            .await;
+
+        let data = match response {
+            Ok(response) => response.json::<model::issue_v3::Response>().await,
+            Err(_) => return Err(error::Error::RequestError)
+        };
+
+        match data {
+            Ok(data) => Ok(data),
+            Err(_) => Err(error::Error::ParseError)
         }
     }
 }

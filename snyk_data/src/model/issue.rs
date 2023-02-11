@@ -22,6 +22,21 @@ impl AggregatedIssuesRequest {
             filters: None,
         }
     }
+
+    pub fn include_description(mut self, enable: bool) -> Self {
+        self.include_description = Some(enable);
+        self
+    }
+
+    pub fn include_introduced_through(mut self, enable: bool) -> Self {
+        self.include_introduced_through = Some(enable);
+        self
+    }
+
+    pub fn filters(mut self, filters: Filters) -> Self {
+        self.filters = Some(filters);
+        self
+    }
 }
 
 #[derive(Debug, PartialEq, Serialize)]
@@ -44,6 +59,49 @@ pub struct Filters {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     priority: Option<PriorityScore>,
+}
+
+impl Filters {
+    pub fn new() -> Self {
+        Self {
+            severities: None,
+            exploit_maturity: None,
+            types: None,
+            ignored: None,
+            patched: None,
+            priority: None
+        }
+    }
+
+    pub fn severities(mut self, severities: Vec<Severity>) -> Self {
+        self.severities = Some(severities);
+        self
+    }
+
+    pub fn exploit_maturity(mut self, exploit_maturity: ExploitMaturity) -> Self {
+        self.exploit_maturity = Some(exploit_maturity);
+        self
+    }
+
+    pub fn types(mut self, types: Vec<Type>) -> Self {
+        self.types = Some(types);
+        self
+    }
+
+    pub fn ignored(mut self, ignored: bool) -> Self {
+        self.ignored = Some(ignored);
+        self
+    }
+
+    pub fn patched(mut self, patched: bool) -> Self {
+        self.patched = Some(patched);
+        self
+    }
+
+    pub fn priority(mut self, priority: PriorityScore) -> Self {
+        self.priority = Some(priority);
+        self
+    }
 }
 
 #[derive(Debug, PartialEq, Serialize)]
@@ -77,11 +135,30 @@ pub struct PriorityScore {
     score: Score,
 }
 
+impl PriorityScore {
+    pub fn new(min: usize, max: usize) -> Self {
+        let score = Score::new(min, max);
+
+        Self {
+            score
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Score {
     min: usize,
     max: usize,
+}
+
+impl Score {
+    pub fn new(min: usize, max: usize) -> Self {
+        Self {
+            min,
+            max
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Deserialize)]

@@ -13,6 +13,11 @@ impl ListProjectsRequest {
     pub fn new() -> Self {
         Self { filters: None }
     }
+
+    pub fn filters(mut self, filters: Filters) -> Self {
+        self.filters = Some(filters);
+        self
+    }
 }
 
 #[derive(Debug, PartialEq, Serialize)]
@@ -47,6 +52,36 @@ impl Filters {
             tags: None,
             attributes: None,
         }
+    }
+
+    pub fn name(mut self, name: String) -> Self {
+        self.name = Some(name);
+        self
+    }
+
+    pub fn origin(mut self, origin: String) -> Self {
+        self.origin = Some(origin);
+        self
+    }
+
+    pub fn r#type(mut self, r#type: String) -> Self {
+        self.r#type = Some(r#type);
+        self
+    }
+
+    pub fn is_monitored(mut self, is_monitored: bool) -> Self {
+        self.is_monitored = Some(is_monitored);
+        self
+    }
+
+    pub fn tags(mut self, tags: Tags) -> Self {
+        self.tags = Some(tags);
+        self
+    }
+
+    pub fn attributes(mut self, attributes: Attributes) -> Self {
+        self.attributes = Some(attributes);
+        self
     }
 }
 
@@ -99,21 +134,21 @@ pub struct Org {
 pub struct Project {
     pub name: String,
     pub id: String,
-    created: chrono::DateTime<Utc>,
-    origin: String,
-    r#type: String,
-    read_only: bool,
-    test_frequency: String,
-    total_dependencies: Option<usize>,
-    issue_counts_by_severity: IssueCountsBySeverity,
-    remote_repo_url: Option<url::Url>,
-    last_tested_date: chrono::DateTime<Utc>,
-    importing_user: Option<User>,
-    is_monitored: bool,
-    owner: Option<User>,
-    branch: Option<String>,
-    target_reference: Option<String>,
-    tags: Vec<Tag>,
+    pub created: chrono::DateTime<Utc>,
+    pub origin: String,
+    pub r#type: String,
+    pub read_only: bool,
+    pub test_frequency: String,
+    pub total_dependencies: Option<usize>,
+    pub issue_counts_by_severity: IssueCountsBySeverity,
+    pub remote_repo_url: Option<url::Url>,
+    pub last_tested_date: chrono::DateTime<Utc>,
+    pub importing_user: Option<User>,
+    pub is_monitored: bool,
+    pub owner: Option<User>,
+    pub branch: Option<String>,
+    pub target_reference: Option<String>,
+    pub tags: Vec<Tag>,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
