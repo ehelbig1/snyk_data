@@ -1,6 +1,8 @@
 use anyhow;
 use snyk_data;
 use structopt::StructOpt;
+use crate::entities::projects::FromModel;
+use serde_json;
 
 #[derive(Debug, PartialEq, StructOpt)]
 pub struct Opt {
@@ -32,11 +34,11 @@ impl Opt {
                     filters
                 };
 
-                let properties = snyk_data::model::projects::ListProjectsRequest::new()
-                    .filters(filters);
+                let properties =
+                    snyk_data::model::projects::ListProjectsRequest::new().filters(filters);
 
-                let projects = datasource.list_projects(&opt.org_id, &properties).await?;
-                dbg!(projects);
+                let projects = crate::entities::projects::Projects::from_model(datasource.list_projects(&opt.org_id, &properties).await?);
+                println!("{}", serde_json::to_string(&projects).unwrap());
 
                 Ok(())
             }
@@ -66,5 +68,5 @@ struct List {
     r#type: Option<String>,
 
     /// Filter based on whether a project is monitored or not
-    is_monitored: Option<bool>
+    is_monitored: Option<bool>,
 }

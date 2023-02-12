@@ -1,6 +1,8 @@
 use anyhow;
 use snyk_data;
 use structopt::StructOpt;
+use serde_json;
+use crate::entities::orgs::FromModel;
 
 #[derive(Debug, PartialEq, StructOpt)]
 pub struct Opt {
@@ -12,17 +14,18 @@ impl Opt {
     pub async fn run(self, datasource: &dyn snyk_data::Datasource) -> anyhow::Result<()> {
         match self.cmd {
             Command::List(opt) => {
-                let orgs = datasource.list_orgs().await?;
+                let mut orgs = crate::entities::orgs::Orgs::from_model(datasource.list_orgs().await?);
 
-                let orgs: Vec<snyk_data::model::org::Org> = if let Some(name) = opt.name {
-                    orgs.orgs.into_iter()
+                orgs = if let Some(name) = opt.name {
+                    orgs
+                        .into_iter()
                         .filter(|org| org.name.to_lowercase().contains(&name))
                         .collect()
                 } else {
-                    orgs.orgs
+                    orgs
                 };
 
-                dbg!(orgs);
+                println!("{}", serde_json::to_string(&orgs).unwrap());
 
                 Ok(())
             }
@@ -37,6 +40,7 @@ enum Command {
 
 #[derive(Debug, PartialEq, StructOpt)]
 struct List {
+    /// Lists orgs that contain <name>
     #[structopt(short, long)]
-    name: Option<String>
+    name: Option<String>,
 }

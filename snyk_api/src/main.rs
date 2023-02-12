@@ -5,6 +5,7 @@ use std::env;
 use structopt::StructOpt;
 
 mod command;
+mod entities;
 
 #[derive(Debug, PartialEq, StructOpt)]
 struct Opt {

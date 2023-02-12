@@ -18,10 +18,12 @@ impl Opt {
                 dbg!(issues);
 
                 Ok(())
-            },
+            }
             Command::ListCode(opt) => {
                 let properties = snyk_data::model::issue_v3::SnykCodeIssuesRequest::new();
-                let mut response = datasource.list_sast_issues(&opt.org_id, &opt.project_id, &properties).await?;
+                let mut response = datasource
+                    .list_sast_issues(&opt.org_id, &opt.project_id, &properties)
+                    .await?;
                 let mut issues = response.data;
 
                 // if response.links.next exists then paginate issues
@@ -30,11 +32,19 @@ impl Opt {
                         response = datasource.next(&next_link).await?;
                         issues.append(&mut response.data);
 
-                        if response.links.next.is_none() { break; };
+                        if response.links.next.is_none() {
+                            break;
+                        };
                     }
                 };
-            
-                dbg!(issues);
+
+                dbg!(&issues);
+
+                let detail_url = &issues.first().unwrap().links.own.as_ref().unwrap();
+
+                let detail_response = datasource.list_sast_issue_details(&detail_url).await?;
+
+                dbg!(detail_response);
 
                 Ok(())
             }
@@ -45,7 +55,7 @@ impl Opt {
 #[derive(Debug, PartialEq, StructOpt)]
 enum Command {
     List(List),
-    ListCode(ListCode)
+    ListCode(ListCode),
 }
 
 #[derive(Debug, PartialEq, StructOpt)]
