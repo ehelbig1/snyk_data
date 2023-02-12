@@ -1,0 +1,69 @@
+Issue
+    id: "SNYK-JS-CSSWHAT-1298035",
+    issue_type: "vuln",
+    pkg_name: "css-what",
+    pkg_versions: [
+        "2.1.3",
+    ]
+    issue_data:
+        id: "SNYK-JS-CSSWHAT-1298035",
+        title: "Regular Expression Denial of Service (ReDoS)",
+        severity: "medium",
+        original_severity: None,
+        url: "https://snyk.io/vuln/SNYK-JS-CSSWHAT-1298035",
+        description: None,
+            identifiers:
+                Identifiers:
+                    cve:
+                        [
+                            "CVE-2021-33587",
+                        ]
+                    cwe:
+                        [
+                            "CWE-400",
+                        ]
+                    osvdb: None
+                credit:
+                    [
+                        "Unknown",
+                    ],
+                exploit_maturity:
+                    "no-known-exploit"
+                semver:
+                    vulnerable: Versions:
+                        [
+                            "<5.0.1"
+                        ]
+                    unaffected: None
+                publication_time: 2021-05-30T13:11:01.486283Z
+                disclosure_time: 2021-05-30T09:19:01Z,
+                cvssv3: "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+                cvss_score: 5.3
+                language: "js",
+                patches: []
+                nearest_fixed_in_version: "",
+                path: None,
+                violated_policy_public_id: None,
+                is_malicious_package: false
+            introduced_through: None
+            is_patched: false
+            is_ignored: false
+            ignore_reasons: None
+            fix_info:
+                is_upgradable: true,
+                is_pinnable: false,
+                is_patchable: false,
+                is_fixable: false,
+                is_partially_fixable: false,
+                nearest_fixed_in_version: "",
+                fixed_in:
+                    [
+                        "5.0.1",
+                    ]
+            priority:
+                score: 265,
+                factors: [
+                    name: "cvssScore",
+                    description: "CVSS 5.3",
+            links:
+                paths: "https://app.snyk.io/api/v1/org/26f08cd8-212b-4530-b8a4-25891f156634/project/2df793c1-13dd-4580-b844-be12eac69ee8/history/db17120a-fd6e-408e-a62d-0aba516b8ee3/issue/SNYK-JS-CSSWHAT-1298035/paths",

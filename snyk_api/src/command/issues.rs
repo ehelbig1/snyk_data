@@ -15,6 +15,9 @@ impl Opt {
                 let issues = datasource
                     .list_aggregated_sca_container_iac_issues(&opt.org_id, &opt.project_id)
                     .await?;
+
+                // how can we know from here if the issues are from a container, iac, or manifest file?
+                // this information is one level higher, in the project itself
                 dbg!(issues);
 
                 Ok(())

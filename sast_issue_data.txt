@@ -1,0 +1,47 @@
+Issue
+    type: "issue_summary",
+    id: "9c947106-a9f6-4d65-b505-d6bd28c30ba1",
+    attributes:
+        issue_type: "code",
+        title: "Path Traversal",
+        severity: High,
+        ignored: false,
+        cwe: [
+            "CWE-23",
+        ],
+        links: Links {
+            own: "/orgs/26f08cd8-212b-4530-b8a4-25891f156634/issues/detail/code/9c947106-a9f6-4d65-b505-d6bd28c30ba1?project_id=c9f507ea-44b2-4e4b-aef4-2a2ad932d933&version=2022-04-06~experimental"
+            next: None,
+            prev: None,
+            first: None,
+            last: None,
+            related: None,
+    
+Details
+    attributes:
+        cwe: [
+            "CWE-23",
+        ],
+        ignored: false,
+        issue_type: "code",
+        severity: High,
+        title: "(BETA Suggestion) Unsanitized input from an HTTP parameter flows into global::System.IO.File.ReadAllText, where it is used as a path. This may result in a Path Traversal vulnerability and allow an attacker to read arbitrary files.",
+        fingerprint: "c493a004.39b8d118.ba07f767.f5757239.a758fffc.252a8fb7.5f1fa597.a142f64d.c44d6ed0.39b8d118.1d318ef7.f5757239.91206371.252a8fb7.ce0185b2.d9ea2feb"
+        fingerprint_version: "1",
+        primary_file_path: "Controllers/ComponentController.cs"
+        primary_region:
+            PrimaryRegion:
+                end_line: 23
+                end_column: 61
+                start_line: 23
+                start_column: 36
+        priority_score: 752
+        priority_score_factors:
+            [
+                "Found in multiple code flows",
+                "Has fix examples available",
+            ]
+        id: "9c947106-a9f6-4d65-b505-d6bd28c30ba1",
+        type: "code_issue",
+    jsonapi:
+        version: "1.0",

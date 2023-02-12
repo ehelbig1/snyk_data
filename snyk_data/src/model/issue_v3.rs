@@ -7,7 +7,7 @@ pub struct SnykCodeIssuesRequest {
     pub starting_after: Option<String>,
     pub ending_before: Option<String>,
     pub limit: Option<usize>,
-    pub version: String
+    pub version: String,
 }
 
 impl SnykCodeIssuesRequest {
@@ -18,7 +18,7 @@ impl SnykCodeIssuesRequest {
             starting_after: None,
             ending_before: None,
             limit: None,
-            version: String::from("2022-04-06~experimental")
+            version: String::from("2022-04-06~experimental"),
         }
     }
 }
@@ -29,19 +29,19 @@ pub enum Severity {
     Low,
     Medium,
     High,
-    Critical
+    Critical,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Response {
     pub jsonapi: JsonAPI,
     pub data: Vec<Issue>,
-    pub links: Links
+    pub links: Links,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct JsonAPI {
-    pub version: String
+    pub version: String,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
@@ -49,7 +49,7 @@ pub struct Issue {
     pub r#type: String,
     pub id: String,
     pub attributes: Attributes,
-    pub links: Links
+    pub links: Links,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
@@ -59,7 +59,7 @@ pub struct Attributes {
     pub title: String,
     pub severity: Severity,
     pub ignored: bool,
-    pub cwe: Vec<String>
+    pub cwe: Vec<String>,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
@@ -70,5 +70,5 @@ pub struct Links {
     pub prev: Option<String>,
     pub first: Option<String>,
     pub last: Option<String>,
-    pub related: Option<String>
+    pub related: Option<String>,
 }

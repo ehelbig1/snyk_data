@@ -154,17 +154,17 @@ pub struct Project {
 #[derive(Debug, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct IssueCountsBySeverity {
-    low: usize,
-    medium: usize,
-    high: usize,
-    critical: usize,
+    pub low: usize,
+    pub medium: usize,
+    pub high: usize,
+    pub critical: usize,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct User {
-    id: String,
-    name: String,
-    username: Option<String>,
-    email: Option<String>,
+    pub id: String,
+    pub name: String,
+    pub username: Option<String>,
+    pub email: Option<String>,
 }

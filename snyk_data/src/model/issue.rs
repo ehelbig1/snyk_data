@@ -17,8 +17,8 @@ pub struct AggregatedIssuesRequest {
 impl AggregatedIssuesRequest {
     pub fn new() -> Self {
         Self {
-            include_description: None,
-            include_introduced_through: None,
+            include_description: Some(true),
+            include_introduced_through: Some(true),
             filters: None,
         }
     }
@@ -69,7 +69,7 @@ impl Filters {
             types: None,
             ignored: None,
             patched: None,
-            priority: None
+            priority: None,
         }
     }
 
@@ -139,9 +139,7 @@ impl PriorityScore {
     pub fn new(min: usize, max: usize) -> Self {
         let score = Score::new(min, max);
 
-        Self {
-            score
-        }
+        Self { score }
     }
 }
 
@@ -154,10 +152,7 @@ pub struct Score {
 
 impl Score {
     pub fn new(min: usize, max: usize) -> Self {
-        Self {
-            min,
-            max
-        }
+        Self { min, max }
     }
 }
 
@@ -291,8 +286,8 @@ pub struct Priority {
 #[derive(Debug, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Factor {
-    name: String,
-    description: String,
+    pub name: String,
+    pub description: String,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
