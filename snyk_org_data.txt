@@ -1,9 +1,0 @@
-Org:
-    id: "6f116a19-dad4-4447-ab35-f92208833158",
-    name: "WillowTree/AB-Darwin - External",
-    slug: "willowtreeab-darwin-external",
-    url: "https://app.snyk.io/org/willowtreeab-darwin-external",
-    group:
-        name: "WillowTree",
-        id: "692660b8-c583-4d22-994c-85eb8a002407",
-    created: 2022-02-02T10:34:49.505-05:00,

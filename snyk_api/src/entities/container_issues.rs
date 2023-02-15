@@ -75,24 +75,24 @@ pub struct ContainerIssue {
     //severity_factors: Option<Vec<SeverityFactor>>
 }
 
-#[derive(Debug, PartialEq, Serialize)]
-pub enum Severity {
-    Critical,
-    High,
-    Medium,
-    Low
-}
+// #[derive(Debug, PartialEq, Serialize)]
+// pub enum Severity {
+//     Critical,
+//     High,
+//     Medium,
+//     Low
+// }
 
-impl Severity {
-    fn from_model(model: snyk_data::model::issue::Severity) -> Self {
-        match model {
-            Critical => Self::Critical,
-            High => Self::High,
-            Medium => Self::Medium,
-            Low => Self::Low
-        }
-    }
-}
+// impl Severity {
+//     fn from_model(model: snyk_data::model::issue::Severity) -> Self {
+//         match model {
+//             Critical => Self::Critical,
+//             High => Self::High,
+//             Medium => Self::Medium,
+//             Low => Self::Low
+//         }
+//     }
+// }
 
 // pub type SeverityFactors = Vec<SeverityFactor>;
 

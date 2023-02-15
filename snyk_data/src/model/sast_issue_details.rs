@@ -15,31 +15,31 @@ impl Properties {
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Response {
-    data: Data,
-    jsonapi: JsonAPI,
+    pub data: Data,
+    pub jsonapi: JsonAPI,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Data {
-    attributes: Attributes,
-    id: String,
-    r#type: String,
+    pub attributes: Attributes,
+    pub id: String,
+    pub r#type: String,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Attributes {
-    cwe: Vec<String>,
-    ignored: bool,
-    issue_type: String,
-    severity: Severity,
-    title: String,
-    fingerprint: Option<String>,
-    fingerprint_version: Option<String>,
-    primary_file_path: Option<String>,
-    primary_region: Option<PrimaryRegion>,
-    priority_score: Option<usize>,
-    priority_score_factors: Option<Vec<String>>,
+    pub cwe: Vec<String>,
+    pub ignored: bool,
+    pub issue_type: String,
+    pub severity: Severity,
+    pub title: String,
+    pub fingerprint: Option<String>,
+    pub fingerprint_version: Option<String>,
+    pub primary_file_path: Option<String>,
+    pub primary_region: Option<PrimaryRegion>,
+    pub priority_score: Option<usize>,
+    pub priority_score_factors: Option<Vec<String>>,
 }
 
 #[derive(Debug, PartialEq, Deserialize)]
@@ -62,5 +62,5 @@ pub struct PrimaryRegion {
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct JsonAPI {
-    version: String,
+    pub version: String,
 }
